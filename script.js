@@ -1,4 +1,14 @@
 // draw canvas  - marcella
+const tetris = document.getElementById('tetris');
+function createCanvas(){
+    for(let i = 0; i < 200; i++){
+        const square = document.createElement('div');
+        square.classList.add('square');
+        tetris.appendChild(square);
+    }
+}
+createCanvas();
+
 
 // draw blocks - debi 
 
