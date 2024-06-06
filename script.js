@@ -27,8 +27,9 @@ let shapes = [o, i, t, zRight, zLeft, lLeft, lRight]
 let randomNumber = Math.floor(Math.random()*shapes.length)
 console.log(randomNumber)
 //get new shape
+
 function getShape(){
-    
+
 }
 
 
