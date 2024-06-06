@@ -4,8 +4,33 @@ body{
 
 #game-board{
     display: grid;
+    border: 1px solid red;
+    background-color: red;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: repeat(20, 1fr);
+    width: 800px;
+    height: 500px;
+
+}
+
+#tetris {
+    display: grid;
+    float : left;
+    grid-column: 3fr;
+    grid-row: 20fr;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(20, 1fr);
     max-width: 600px;
     margin: 0 auto;
+    border: 1px solid black;
+    width: 240px; height: 400px; background-color: aquamarine;
+}
+
+#start #pause{
+    float : right;
+    grid-column: 1fr;
+    grid-row: 1fr;
+    max-width: 200px;
+    margin: 0 auto;
+    border: 1px solid yellow;;
 }

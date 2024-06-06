@@ -21,6 +21,8 @@
 
 // start
 
+// IF WE HAVE TIME!!!!
+
 // restart
 
 // score
@@ -33,6 +35,9 @@
 
 // sound
 
-// music
+// music    
+
+// EXTRA FUNCTION: alert "Oh no! You kid has just picked something from the fridge!" - delete a randown block... set interval to 10 seconds?
+
 
 
