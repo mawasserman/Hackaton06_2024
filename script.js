@@ -97,18 +97,45 @@ let lRight = [[0,0,1],[1,1,1],[0,0,0]]
 let shapes = [o, i, t, zRight, zLeft, lLeft, lRight]
 
 //create colors
-//const colors = ["yellow", "light-blue", "purple", "red", "green", "blue", "orange"];
+const colors = ["yellow", "light-blue", "purple", "red", "green", "blue", "orange"];
 
-//assign each shape a color:
-//get random shape:
+
 //we have 6 shapes. Create random number 0-6 (to choose shape index)
 let randomNumber = Math.floor(Math.random()*shapes.length)
 console.log(randomNumber)
-//get new shape
 
+//get random shape and assign color:
 function getShape(){
-
+    let shape = shapes[randomNumber];
+    let color = colors[randomNumber];
+    return { shape, color };
+    //console.log(shape, color)
 }
+//getShape();
+let currentShape = getShape().shape;
+let currentColor = getShape().color;
+
+//add shape:
+
+/*function addShape() {
+    currentShape.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value == 1) {
+                //gridsquare.style.backgroundColor = currentColor;
+
+            }
+        }
+    }
+}
+
+/*
+let canvas = document.getElementById("tetris");
+let shapeDiv = document.createElement("div");
+let shapeDivText = document.createTextNode(getShape());
+shapeDiv.appendChild(shapeDivText);
+canvas.appendChild(shapeDiv)*/
+
+
 
 
 
