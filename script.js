@@ -3,7 +3,7 @@ const tetris = document.getElementById('tetris');
 function createCanvas(){
     for(let i = 0; i < 200; i++){
         const square = document.createElement('div');
-        square.classList.add('square');
+        square.classList.add('square', `number${200-i}`);
         tetris.appendChild(square);
     }
 }
@@ -14,7 +14,7 @@ createCanvas();
 
 // give colors to the blocks - debi
 
-// randowmly select a block
+// randowmly select a block - debi
 
 // movement of the block
 //     automatic down
@@ -25,7 +25,33 @@ createCanvas();
 
 // collision detection
 
-// clear the row
+// clear the row - marcella
+
+function clearRow(){
+    for(let j=0; j<20; j++){
+        let objRow = {};
+        for(let i = (0+j); i <(10+(j*10); i++){
+            const blocks = document.querySelector(`.number${i}`);
+            const arrRows = arrRows.push(blocks);
+        }
+        objRow[j] = arrRows; //Does it exist??????? how do i make an object with the rows?
+    
+    }
+}
+
+//     const row = document.querySelector(`number${i}`);
+    //     const row = Array.from(tetris.children).slice(i, i + 10);
+    //     if(row.every(square => square.classList.contains('taken'))){
+    //         row.forEach(square => {
+    //             square.classList.remove('taken');
+    //             square.classList.remove('block');
+    //             square.style.backgroundColor = '';
+    //         })
+    //         const squaresRemoved = tetris.removeChild(tetris.children[i]);
+    //         tetris.prepend(squaresRemoved);
+    //     }
+    // } -----> from copilot...I saved but want to try something myself
+// }
 
 // game over
 
