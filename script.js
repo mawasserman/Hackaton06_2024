@@ -30,7 +30,7 @@ createCanvas();
 function clearRow(){
     for(let j=0; j<20; j++){
         let objRow = {};
-        for(let i = (0+j); i <(10+(j*10); i++){
+        for(let i = (0+j); i <(10+(j*10)); i++){
             const blocks = document.querySelector(`.number${i}`);
             const arrRows = arrRows.push(blocks);
         }
