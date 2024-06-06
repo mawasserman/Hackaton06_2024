@@ -81,7 +81,7 @@ let currentColor = getShape().color;
 
 //add shape:
 
-function addShape() {
+/*function addShape() {
     currentShape.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value == 1) {
