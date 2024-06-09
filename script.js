@@ -19,6 +19,24 @@ createCanvas();
 // rotation of the block
 
 // collision detection
+function checkCollision() {
+    const nextPosition = currentPosition + 10; // Calculate the position of the block one row below the current position
+    const nextRow = Math.floor(nextPosition / 10); // Calculate the row index of the next position
+
+    // Check if any of the squares in the next row are already occupied
+    const collision = currentShape.some((row, y) => {
+        return row.some((value, x) => {
+            if (value === 1) {
+                const index = nextPosition + y * 10 + x;
+                const square = squares[index];
+                return square.classList.contains('newBlock');
+            }
+        });
+    });
+
+    return collision;
+}
+
 
 // clear the row - marcella
 
@@ -48,11 +66,34 @@ function creatingRows() {
 creatingRows();
 console.log(objRow);
 
+function clearRow() {
+    for (let i = 0; i < 20; i++) {
+       
+        if (objRow[i].every(block => block.classList.contains('newBlock'))) {
+            const aboveBlock = objRow[i + 1][objRow[i].indexOf(block)];
+            objRow[i].forEach(block => {
+                if (aboveBlock.classList.contains('newBlock')) {
+                    aboveBlock = block;
+                } else {
+                    block.classList.remove('newBlock');
+                    block.style.backgroundColor = '';
+                }
+            });
 
 
-//     const row = document.querySelector(`number${i}`);
-//         const row = Array.from(tetris.children).slice(i, i + 10);
-//         if(row.every(square => square.classList.contains('taken'))){
+            // Update the game state as necessary, e.g., increase score
+        }
+    }
+}
+
+// classList.add('newBlock')
+
+// function clearRow(){
+//     for(let i=0; i<20; i++){
+//         if(objRow[i].every(square){
+//              square(value ===1))}{
+
+
 //             row.forEach(square => {
 //                 square.classList.remove('taken');
 //                 square.classList.remove('block');
@@ -119,20 +160,20 @@ startBtn.addEventListener('click', startGame);
 
 function startGame(){
 
-//get random shape and assign corresponding color:
-function getShape(){
-    let shape = shapes[randomNumber];
-    let color = colors[randomNumber];
-    return {shape, color};
-}
+    //get random shape and assign corresponding color:
+    function getShape(){
+        let shape = shapes[randomNumber];
+        let color = colors[randomNumber]; // I really liked the way you did it! It is so simple and effective!
+        return {shape, color};
+    }
 
-//assign variable to shape and color chosen randomly:
-let currentShape = getShape().shape;
-//console.log(currentShape);
-let currentColor = getShape().color;
-//console.log(currentColor);
-//define starting position on grid (5th square from top left):
-let currentPosition = 4;
+    //assign variable to shape and color chosen randomly:
+    let currentShape = getShape().shape;
+    //console.log(currentShape);
+    let currentColor = getShape().color;
+    //console.log(currentColor);
+    //define starting position on grid (5th square from top left):
+    let currentPosition = 4;
 
 
 //let squares = Array.from(document.querySelectorAll(".square"));
