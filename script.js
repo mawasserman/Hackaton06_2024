@@ -152,32 +152,42 @@ let shapes = [o, i, t, zRight, zLeft, lLeft, lRight]
 const colors = ["yellow", "lightblue", "purple", "red", "green", "blue", "orange"];
 
 //we have 6 shapes. Create random number 0-6 (to choose shape index)
-let randomNumber = Math.floor(Math.random()*shapes.length)
+//let randomNumber = Math.floor(Math.random()*shapes.length)
+
+
+//let currentShape, currentColor, currentPosition, id;
+function getShape(){
+    let randomNumber = Math.floor(Math.random()*shapes.length)
+    let shape = shapes[randomNumber];
+    let color = colors[randomNumber];
+    return {shape, color};
+}
 
 //add Eventhandler on Start button to start the game:
 let startBtn = document.getElementById("start");
 startBtn.addEventListener('click', startGame);
 
+//let squares = document.querySelectorAll(".square");
+//let currentShape, currentColor, currentPosition;
+//let id;
+let currentShape = getShape().shape;
+console.log(currentShape);
+let currentColor = getShape().color;
+//console.log(currentColor);
+//define starting position on grid (5th square from top left):
+let currentPosition = 4;
+let squares = document.querySelectorAll(".square");
+
 function startGame(){
+//let randomNumber = Math.floor(Math.random()*shapes.length)
+//get random shape and assign corresponding color:
 
-    //get random shape and assign corresponding color:
-    function getShape(){
-        let shape = shapes[randomNumber];
-        let color = colors[randomNumber]; // I really liked the way you did it! It is so simple and effective!
-        return {shape, color};
-    }
 
-    //assign variable to shape and color chosen randomly:
-    let currentShape = getShape().shape;
-    //console.log(currentShape);
-    let currentColor = getShape().color;
-    //console.log(currentColor);
-    //define starting position on grid (5th square from top left):
-    let currentPosition = 4;
+//assign variable to shape and color chosen randomly:
 
 
 //let squares = Array.from(document.querySelectorAll(".square"));
-let squares = document.querySelectorAll(".square");
+
 
  
 // function that draws shape on the grid. takes the shape, the color and the position on the grid as parameters.
@@ -210,20 +220,61 @@ function undrawShape(shape, position) {
         });
     });
  }
+ undrawShape(currentShape, currentPosition);
 
 // this function moves the block down automatically, as it adds to the current position 10 (which is length of grid)
 function moveDown() {
     if (currentPosition < 180){//when position is 180 it should stop, since it arrived at the bottom
-    undrawShape(currentShape, currentPosition);
+    undrawShape(nextShape, currentPosition);
     currentPosition += 10;
-    drawShape(currentShape, currentColor, currentPosition);
+    drawShape(nextShape, nextColor, currentPosition);
     }
     else {
         clearInterval(id);
-
+        getNewShape();
     }
 }
+var id = setInterval(moveDown, 500);
+/*function getNewShape(){
+const {shape, color} = randomNumber;
+currentShape = shape;
+currentColor = color;
+currentPosition = 4;
+drawShape(currentShape, currentColor, currentPosition);
 
+}*/
 //it moves down with 1 milisecond speed
-var id = setInterval(moveDown, 1000);
+
+
+//create next shape
+let nextShape = getShape().shape;
+console.log(nextShape);
+let nextColor = getShape().color;
+//
+function getNewShape(){
+    ({shape: nextShape, color: nextColor} = getShape());
+    currentPosition = 4;
+    drawShape(nextShape, nextColor, currentPosition);
+    undrawShape(nextShape, currentPosition);
+    id = setInterval(moveDown, 500);
 }
+//move left:
+
+function moveLeft() {
+    undrawShape(currentShape, currentPosition);
+    currentPosition -= 1;
+    drawShape(currentShape, currentColor, currentPosition);
+ }
+ //moveLeft();
+ //add eventhandler:
+ 
+ document.addEventListener('keydown', (event) =>{
+     if (event.key === 37){
+         moveLeft();
+     }
+ });
+
+}
+
+
+
