@@ -25,7 +25,7 @@ body {
     border: 1px solid black;
     width: 200px; 
     height: 400px; 
-    background-color: aquamarine;
+    background-color: white;
 }
 
 #start, #pause {
@@ -38,10 +38,10 @@ body {
 }
 
 .square {
-    border: 1px solid black;
+    border: 1px solid white;
     display: inline-block;
-    background-color: rgb(224, 248, 90);
-    opacity: 0.1;
+    background-color: black;
+    /*opacity: 0.1;*/
     width: 20px;
     height: 20px;
 }
