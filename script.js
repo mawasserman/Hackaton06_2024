@@ -22,30 +22,46 @@ createCanvas();
 
 // clear the row - marcella
 
-function clearRow(){
-    for(let j=0; j<20; j++){
-        let objRow = {};
-        for(let i = (0+j); i <(10+(j*10)); i++){
-            const blocks = document.querySelector(`.number${i}`);
-            const arrRows = arrRows.push(blocks);
-        }
-        objRow[j] = arrRows; //Does it exist??????? how do i make an object with the rows?
+// function clearRow(){
+//     for(let j=0; j<20; j++){
+//         let objRow = {};
+//         for(let i = (0+j); i <(10+(j*10)); i++){
+//             const blocks = document.querySelector(`.number${i}`);
+//             const arrRows = arrRows.push(blocks);
+//         }
+//         objRow[j] = arrRows; //Does it exist??????? how do i make an object with the rows?
     
+//     }
+// }
+let objRow = {};
+function creatingRows() { 
+    for (let j = 0; j < 20; j++) {
+        let arrRows = [];
+        for (let i = 1 + (j*10); i < (11 + (j * 10)); i++) {
+            const blocks = document.querySelector(`.number${i}`);
+            arrRows.push(blocks);
+        }
+        objRow[j] = arrRows; 
     }
+    return objRow; 
 }
+creatingRows();
+console.log(objRow);
+
+
 
 //     const row = document.querySelector(`number${i}`);
-    //     const row = Array.from(tetris.children).slice(i, i + 10);
-    //     if(row.every(square => square.classList.contains('taken'))){
-    //         row.forEach(square => {
-    //             square.classList.remove('taken');
-    //             square.classList.remove('block');
-    //             square.style.backgroundColor = '';
-    //         })
-    //         const squaresRemoved = tetris.removeChild(tetris.children[i]);
-    //         tetris.prepend(squaresRemoved);
-    //     }
-    // } -----> from copilot...I saved but want to try something myself
+//         const row = Array.from(tetris.children).slice(i, i + 10);
+//         if(row.every(square => square.classList.contains('taken'))){
+//             row.forEach(square => {
+//                 square.classList.remove('taken');
+//                 square.classList.remove('block');
+//                 square.style.backgroundColor = '';
+//             })
+//             const squaresRemoved = tetris.removeChild(tetris.children[i]);
+//             tetris.prepend(squaresRemoved);
+//         }
+//     } -----> from copilot...I saved but want to try something myself
 // }
 
 // game over
