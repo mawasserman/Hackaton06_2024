@@ -10,11 +10,6 @@ function createCanvas(){
 createCanvas();
 
 
-// draw blocks - debi 
-
-// give colors to the blocks - debi
-
-// randowmly select a block
 
 // movement of the block
 //     automatic down
@@ -71,50 +66,81 @@ let lRight = [[0,0,1],[1,1,1],[0,0,0]]
 let shapes = [o, i, t, zRight, zLeft, lLeft, lRight]
 
 //create colors
-const colors = ["yellow", "light-blue", "purple", "red", "green", "blue", "orange"];
-
+const colors = ["yellow", "lightblue", "purple", "red", "green", "blue", "orange"];
 
 //we have 6 shapes. Create random number 0-6 (to choose shape index)
 let randomNumber = Math.floor(Math.random()*shapes.length)
-console.log(randomNumber)
 
-//get random shape and assign color:
+//add Eventhandler on Start button to start the game:
+let startBtn = document.getElementById("start");
+startBtn.addEventListener('click', startGame);
+
+function startGame(){
+
+//get random shape and assign corresponding color:
 function getShape(){
     let shape = shapes[randomNumber];
     let color = colors[randomNumber];
-    return { shape, color };
-    //console.log(shape, color)
+    return {shape, color};
 }
-//getShape();
+
+//assign variable to shape and color chosen randomly:
 let currentShape = getShape().shape;
+//console.log(currentShape);
 let currentColor = getShape().color;
+//console.log(currentColor);
+//define starting position on grid (5th square from top left):
+let currentPosition = 4;
 
-//add shape:
 
-/*function addShape() {
-    currentShape.forEach((row, y) => {
+//let squares = Array.from(document.querySelectorAll(".square"));
+let squares = document.querySelectorAll(".square");
+
+ 
+// function that draws shape on the grid. takes the shape, the color and the position on the grid as parameters.
+function drawShape(shape, color, position) {
+    //iterate through each row of the shape array, with y as row index:
+    shape.forEach((row, y) => {
+        //iterate over each value in current row, with x as column index:
         row.forEach((value, x) => {
-            if (value == 1) {
-                //gridsquare.style.backgroundColor = currentColor;
-
+            //when the array value is 1, it needs to draw the square:
+            if (value === 1) {
+                const index = position + y * 10 + x;//start at position in grid + row of the shape array*10 (10 is length of one row in grid, this gives the current row of the grid) + x
+                squares[index].classList.add('newBlock');
+                squares[index].style.backgroundColor = color;
             }
-        }
+        });
+    });
+}
+drawShape(currentShape, currentColor, currentPosition);
+
+
+// function that colors the grid back to original color:
+function undrawShape(shape, position) {
+    shape.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value === 1) {
+                const index = position + y * 10 + x;
+                squares[index].classList.remove('newBlock');
+                squares[index].style.backgroundColor = '';
+            }
+        });
+    });
+ }
+
+// this function moves the block down automatically, as it adds to the current position 10 (which is length of grid)
+function moveDown() {
+    if (currentPosition < 180){//when position is 180 it should stop, since it arrived at the bottom
+    undrawShape(currentShape, currentPosition);
+    currentPosition += 10;
+    drawShape(currentShape, currentColor, currentPosition);
+    }
+    else {
+        clearInterval(id);
+
     }
 }
 
-/*
-let canvas = document.getElementById("tetris");
-let shapeDiv = document.createElement("div");
-let shapeDivText = document.createTextNode(getShape());
-shapeDiv.appendChild(shapeDivText);
-canvas.appendChild(shapeDiv)*/
-
-
-
-
-
-
-
-
-
-
+//it moves down with 1 milisecond speed
+var id = setInterval(moveDown, 1000);
+}
