@@ -162,6 +162,7 @@ function startGame(){
 
     //get random shape and assign corresponding color:
     function getShape(){
+        
         let shape = shapes[randomNumber];
         let color = colors[randomNumber]; // I really liked the way you did it! It is so simple and effective!
         return {shape, color};
