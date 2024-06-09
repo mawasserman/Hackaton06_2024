@@ -19,33 +19,90 @@ createCanvas();
 // rotation of the block
 
 // collision detection
+function checkCollision() {
+    const nextPosition = currentPosition + 10; // Calculate the position of the block one row below the current position
+    const nextRow = Math.floor(nextPosition / 10); // Calculate the row index of the next position
+
+    // Check if any of the squares in the next row are already occupied
+    const collision = currentShape.some((row, y) => {
+        return row.some((value, x) => {
+            if (value === 1) {
+                const index = nextPosition + y * 10 + x;
+                const square = squares[index];
+                return square.classList.contains('newBlock');
+            }
+        });
+    });
+
+    return collision;
+}
+
 
 // clear the row - marcella
 
-function clearRow(){
-    for(let j=0; j<20; j++){
-        let objRow = {};
-        for(let i = (0+j); i <(10+(j*10)); i++){
-            const blocks = document.querySelector(`.number${i}`);
-            const arrRows = arrRows.push(blocks);
-        }
-        objRow[j] = arrRows; //Does it exist??????? how do i make an object with the rows?
+// function clearRow(){
+//     for(let j=0; j<20; j++){
+//         let objRow = {};
+//         for(let i = (0+j); i <(10+(j*10)); i++){
+//             const blocks = document.querySelector(`.number${i}`);
+//             const arrRows = arrRows.push(blocks);
+//         }
+//         objRow[j] = arrRows; //Does it exist??????? how do i make an object with the rows?
     
+//     }
+// }
+let objRow = {};
+function creatingRows() { 
+    for (let j = 0; j < 20; j++) {
+        let arrRows = [];
+        for (let i = 1 + (j*10); i < (11 + (j * 10)); i++) {
+            const blocks = document.querySelector(`.number${i}`);
+            arrRows.push(blocks);
+        }
+        objRow[j] = arrRows; 
+    }
+    return objRow; 
+}
+creatingRows();
+console.log(objRow);
+
+function clearRow() {
+    for (let i = 0; i < 20; i++) {
+       
+        if (objRow[i].every(block => block.classList.contains('newBlock'))) {
+            const aboveBlock = objRow[i + 1][objRow[i].indexOf(block)];
+            objRow[i].forEach(block => {
+                if (aboveBlock.classList.contains('newBlock')) {
+                    aboveBlock = block;
+                } else {
+                    block.classList.remove('newBlock');
+                    block.style.backgroundColor = '';
+                }
+            });
+
+
+            // Update the game state as necessary, e.g., increase score
+        }
     }
 }
 
-//     const row = document.querySelector(`number${i}`);
-    //     const row = Array.from(tetris.children).slice(i, i + 10);
-    //     if(row.every(square => square.classList.contains('taken'))){
-    //         row.forEach(square => {
-    //             square.classList.remove('taken');
-    //             square.classList.remove('block');
-    //             square.style.backgroundColor = '';
-    //         })
-    //         const squaresRemoved = tetris.removeChild(tetris.children[i]);
-    //         tetris.prepend(squaresRemoved);
-    //     }
-    // } -----> from copilot...I saved but want to try something myself
+// classList.add('newBlock')
+
+// function clearRow(){
+//     for(let i=0; i<20; i++){
+//         if(objRow[i].every(square){
+//              square(value ===1))}{
+
+
+//             row.forEach(square => {
+//                 square.classList.remove('taken');
+//                 square.classList.remove('block');
+//                 square.style.backgroundColor = '';
+//             })
+//             const squaresRemoved = tetris.removeChild(tetris.children[i]);
+//             tetris.prepend(squaresRemoved);
+//         }
+//     } -----> from copilot...I saved but want to try something myself
 // }
 
 // game over
