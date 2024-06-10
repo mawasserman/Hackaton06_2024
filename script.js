@@ -17,6 +17,7 @@ createCanvas();
 //     fast down
 
 // rotation of the block
+// 3549
 
 // collision detection
 function checkCollision() {
@@ -114,6 +115,7 @@ function clearRow() {
 // restart
 
 // score
+//27:20
 
 // level
 
