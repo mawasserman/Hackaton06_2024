@@ -267,7 +267,9 @@ function getNewShape(){
 
 function moveLeft() {
     undrawShape(currentShape, currentPosition);
+    if (currentPosition % 10 !== 0){
     currentPosition -= 1;
+    }
     drawShape(currentShape, currentColor, currentPosition);
  }
  
@@ -282,8 +284,11 @@ function moveLeft() {
 
 function moveRight() {
     undrawShape(currentShape, currentPosition);
+    if ((currentPosition + currentShape[0].length) % 10 !== 0){
     currentPosition += 1;
+    }
     drawShape(currentShape, currentColor, currentPosition);
+    console.log(currentShape[0].length)
  }
  
  //add eventhandler:
@@ -293,6 +298,38 @@ function moveRight() {
          moveRight();
      }
  });
+
+ //move fast down
+ function moveDownFast() {
+    undrawShape(currentShape, currentPosition);
+    currentPosition += 10;
+    drawShape(currentShape, currentColor, currentPosition);
+ }
+ 
+ //add eventhandler:
+ 
+ document.addEventListener('keydown', (event) =>{
+     if (event.key === 'ArrowDown'){
+        if (currentPosition < 180){
+         moveDownFast();
+        }
+     }
+ });
+
+ //rotate:
+ function rotate() {
+    const rotatedShape = currentShape[0].map((_, index) => currentShape.map(row => row[index])).reverse();
+    undrawShape(currentShape, currentPosition);
+    currentShape = rotatedShape;
+    drawShape(currentShape, currentColor, currentPosition);
+}
+//add eventhandler:
+ 
+document.addEventListener('keydown', (event) =>{
+    if (event.key === 'ArrowUp'){
+       rotate();
+    }
+});
 
  
 
