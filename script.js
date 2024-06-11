@@ -1,17 +1,42 @@
 // draw canvas  - marcella
 const tetris = document.getElementById('tetris');
+// const game = document.getElementById('game'); //diff
 function createCanvas(){
     for(let i = 0; i < 200; i++){
         const square = document.createElement('div');
         square.classList.add('square', `number${200-i}`);
         tetris.appendChild(square);
     }
+    for(let j = 0; j < 10; j++){
+        const phantomSquare = document.createElement('div');
+        phantomSquare.classList.add('phantom');
+        tetris.appendChild(phantomSquare);
+    }
 }
 createCanvas();
 
+const squares = Array.from(document.querySelectorAll('.square'));
 
+let currentPosition = 4;
 
-// movement of the block
+// Function to check for collisions and stop the block if necessary
+function stopBlock() {
+    // Check if any part of the block will collide with a 'phantomSquare' in the next move
+    if (currentPosition.some(index => squares[currentPosition[index] + 10].classList.contains('phantomSquare'))) {
+        // Add 'phantomSquare' class to the current position squares
+        currentPosition.forEach(index => squares[currentPosition[index]].classList.add('phantomSquare'));
+        // Call drawShape to draw a new shape
+        drawShape();
+    }
+}
+
+// Example of defining currentPosition for testing
+currentPosition = [0, 1, 2, 3]; // Example: indices of the current block
+
+// Call the function to test
+stopBlock();
+
+// // movement of the block
 //     automatic down
 //     side by side
 //     fast down
@@ -20,23 +45,23 @@ createCanvas();
 // 3549
 
 // collision detection
-function checkCollision() {
-    const nextPosition = currentPosition + 10; // Calculate the position of the block one row below the current position
-    const nextRow = Math.floor(nextPosition / 10); // Calculate the row index of the next position
+// function checkCollision() {
+//     const nextPosition = currentPosition + 10; // Calculate the position of the block one row below the current position
+//     const nextRow = Math.floor(nextPosition / 10); // Calculate the row index of the next position
 
-    // Check if any of the squares in the next row are already occupied
-    const collision = currentShape.some((row, y) => {
-        return row.some((value, x) => {
-            if (value === 1) {
-                const index = nextPosition + y * 10 + x;
-                const square = squares[index];
-                return square.classList.contains('newBlock');
-            }
-        });
-    });
+//     // Check if any of the squares in the next row are already occupied
+//     const collision = currentShape.some((row, y) => {
+//         return row.some((value, x) => {
+//             if (value === 1) {
+//                 const index = nextPosition + y * 10 + x;
+//                 const square = squares[index];
+//                 return square.classList.contains('newBlock');
+//             }
+//         });
+//     });
 
-    return collision;
-}
+//     return collision;
+// }
 
 
 // clear the row - marcella
@@ -165,10 +190,15 @@ function getShape(){
     return {shape, color};
 }
 
+ 
+ 
 //add Eventhandler on Start button to start the game:
-let startBtn = document.getElementById("start");
-startBtn.addEventListener('click', startGame);
+document.getElementById("start").addEventListener('click', startGame);
 
+function startGame(){
+    squares = document.querySelectorAll(".square");
+    getNewShape();
+}
 //let squares = document.querySelectorAll(".square");
 //let currentShape, currentColor, currentPosition;
 //let id;
@@ -177,10 +207,10 @@ console.log(currentShape);
 let currentColor = getShape().color;
 //console.log(currentColor);
 //define starting position on grid (5th square from top left):
-let currentPosition = 4;
-let squares = document.querySelectorAll(".square");
+// let currentPosition = 4;
+// let squares = document.querySelectorAll(".square");
 
-function startGame(){
+//function startGame(){
 //let randomNumber = Math.floor(Math.random()*shapes.length)
 //get random shape and assign corresponding color:
 
@@ -207,7 +237,7 @@ function drawShape(shape, color, position) {
         });
     });
 }
-drawShape(currentShape, currentColor, currentPosition);
+//drawShape(currentShape, currentColor, currentPosition);
 
 
 // function that colors the grid back to original color:
@@ -222,14 +252,14 @@ function undrawShape(shape, position) {
         });
     });
  }
- undrawShape(currentShape, currentPosition);
+ //undrawShape(currentShape, currentPosition);
 
 // this function moves the block down automatically, as it adds to the current position 10 (which is length of grid)
 function moveDown() {
     if (currentPosition < 180){//when position is 180 it should stop, since it arrived at the bottom
-    undrawShape(nextShape, currentPosition);
+    undrawShape(currentShape, currentPosition);
     currentPosition += 10;
-    drawShape(nextShape, nextColor, currentPosition);
+    drawShape(currentShape, currentColor, currentPosition);
     }
     else {
         clearInterval(id);
@@ -249,34 +279,91 @@ drawShape(currentShape, currentColor, currentPosition);
 
 
 //create next shape
-let nextShape = getShape().shape;
-console.log(nextShape);
-let nextColor = getShape().color;
+//let nextShape = getShape().shape;
+//console.log(nextShape);
+//let nextColor = getShape().color;
 //
 function getNewShape(){
-    ({shape: nextShape, color: nextColor} = getShape());
+    ({shape: currentShape, color: currentColor} = getShape());
     currentPosition = 4;
-    drawShape(nextShape, nextColor, currentPosition);
-    undrawShape(nextShape, currentPosition);
+    drawShape(currentShape, currentColor, currentPosition);
+    undrawShape(currentShape, currentPosition);
     id = setInterval(moveDown, 500);
 }
 //move left:
 
 function moveLeft() {
     undrawShape(currentShape, currentPosition);
+    if (currentPosition % 10 !== 0){
     currentPosition -= 1;
+    }
     drawShape(currentShape, currentColor, currentPosition);
  }
- //moveLeft();
+ 
  //add eventhandler:
  
  document.addEventListener('keydown', (event) =>{
-     if (event.key === 37){
+     if (event.key === 'ArrowLeft'){
          moveLeft();
      }
  });
+ //move right:
 
+function moveRight() {
+    undrawShape(currentShape, currentPosition);
+    if ((currentPosition + currentShape[0].length) % 10 !== 0){
+    currentPosition += 1;
+    }
+    drawShape(currentShape, currentColor, currentPosition);
+    console.log(currentShape[0].length)
+ }
+ 
+ //add eventhandler:
+ 
+ document.addEventListener('keydown', (event) =>{
+     if (event.key === 'ArrowRight'){
+         moveRight();
+     }
+ });
+
+ //move fast down
+ function moveDownFast() {
+    undrawShape(currentShape, currentPosition);
+    currentPosition += 10;
+    drawShape(currentShape, currentColor, currentPosition);
+ }
+ 
+ //add eventhandler:
+ 
+ document.addEventListener('keydown', (event) =>{
+     if (event.key === 'ArrowDown'){
+        if (currentPosition < 180){
+         moveDownFast();
+        }
+     }
+ });
+
+ //rotate:
+ function rotate() {
+    const rotatedShape = currentShape[0].map((_, index) => currentShape.map(row => row[index])).reverse();
+    undrawShape(currentShape, currentPosition);
+    currentShape = rotatedShape;
+    drawShape(currentShape, currentColor, currentPosition);
 }
+//add eventhandler:
+ 
+document.addEventListener('keydown', (event) =>{
+    if (event.key === 'ArrowUp'){
+       rotate();
+    }
+});
+
+ 
+
+ 
+
+
+
 
 
 
