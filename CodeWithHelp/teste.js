@@ -192,6 +192,38 @@ function creatingRows() {
 }
 creatingRows();
 
+// Clear full rows
+function clearFullRows() {
+    for (let j = 19; j >= 0; j--) { // Start from the bottom row
+        const row = objRow[j];
+        if (row.every(square => square.classList.contains('phantomSquare'))) {
+            // Clear the full row
+            row.forEach(square => {
+                square.classList.remove('phantomSquare', 'newBlock');
+                square.style.backgroundColor = '';
+            });
+
+            // Shift down all rows above the cleared row
+            for (let k = j; k > 0; k--) {
+                objRow[k].forEach((square, index) => {
+                    const aboveSquare = objRow[k - 1][index];
+                    square.className = aboveSquare.className;
+                    square.style.backgroundColor = aboveSquare.style.backgroundColor;
+                });
+            }
+
+            // Clear the top row
+            objRow[0].forEach(square => {
+                square.classList.remove('phantomSquare', 'newBlock');
+                square.style.backgroundColor = '';
+            });
+
+            // Move down one row after clearing
+            j++;
+        }
+    }
+}
+clearFullRows();
 // Event listeners
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') {
@@ -243,3 +275,4 @@ function pauseGame() {
     }
     isPaused = !isPaused;
 }
+
