@@ -18,8 +18,8 @@ function createCanvas() {
 }
 createCanvas();
 
-const squares = Array.from(document.querySelectorAll('.square'));
-let currentPosition = 4;
+const squares = Array.from(document.querySelectorAll('.square'));//Array.from converts to array, so array methods can be used on squares
+let currentPosition = 4;//to start the game in the middle of the row
 let currentShape, currentColor;
 let gameInterval;
 let isPaused = false;
@@ -72,11 +72,11 @@ function undrawShape(shape, position) {
 function checkCollision(shape, position) {
     return shape.some((row, y) =>
         row.some((value, x) => {
-            if (value === 1) {
+            if (value === 1) {//if value 1 check if there is collision
                 const index = position + y * 10 + x;
                 return (
-                    index >= 200 || 
-                    squares[index].classList.contains('phantomSquare')
+                    index >= 200 || ////check if outside of grid
+                    squares[index].classList.contains('phantomSquare')//check if square already taken
                 );
             }
             return false;
@@ -86,16 +86,16 @@ function checkCollision(shape, position) {
 
 // Move shape down
 function moveDown() {
-    if (isPaused) return;
+    if (isPaused) return;//if game is paused, don't execute moving
     undrawShape(currentShape, currentPosition);
-    currentPosition += 10;
+    currentPosition += 10;//move down by one row
     if (checkCollision(currentShape, currentPosition)) {
-        currentPosition -= 10;
+        currentPosition -= 10;//if collision after moving down, move back up
         drawShape(currentShape, currentColor, currentPosition);
-        stopBlock();
-        return;
+        stopBlock();//see below
+        return;//stop function
     }
-    drawShape(currentShape, currentColor, currentPosition);
+    drawShape(currentShape, currentColor, currentPosition);//if no other condition draw new shape in row below
 }
 
 // Move shape left
@@ -143,7 +143,13 @@ function moveDownFast() {
 // Rotate shape
 function rotate() {
     if (isPaused) return;
-    const rotatedShape = currentShape[0].map((_, index) => currentShape.map(row => row[index])).reverse();
+    const rotatedShape = currentShape[0].map((_, index) => currentShape.map(row => row[index]).reverse());
+    //access first row of shape:currentShape[0] (all rows have same length)
+    //.map((_, index) => : iterate over each element in first row (with value of element and index of element)
+    //currentShape.map(row => row[index]): transpose the shape:
+    // -> row => row[index] select element at same index from each row
+    //currentShape.map ally it to every row
+    //.reverse() reverses the order of the rows
     undrawShape(currentShape, currentPosition);
     if (!checkCollision(rotatedShape, currentPosition) && !rotatedShape.some((row, y) => row.some((value, x) => value === 1 && (currentPosition + x) % 10 === 0))) {
         currentShape = rotatedShape;
@@ -157,15 +163,19 @@ function stopBlock() {
         row.forEach((value, x) => {
             if (value === 1) {
                 const index = currentPosition + y * 10 + x;
+                //adds phantomSquare class to squares that are fixed and will not move further
                 squares[index].classList.add('phantomSquare');
             }
         });
     });
+    
+    clearFullRows();
     getNewShape();
 }
 
 // Get and draw a new shape
 function getNewShape() {
+    //use getShape to creat enew shape with color
     ({ shape: currentShape, color: currentColor } = getShape());
     currentPosition = 4;
     if (checkCollision(currentShape, currentPosition)) {
@@ -194,6 +204,7 @@ creatingRows();
 
 // Clear full rows
 function clearFullRows() {
+    
     for (let j = 19; j >= 0; j--) { // Start from the bottom row
         const row = objRow[j];
         if (row.every(square => square.classList.contains('phantomSquare'))) {
@@ -202,9 +213,11 @@ function clearFullRows() {
                 square.classList.remove('phantomSquare', 'newBlock');
                 square.style.backgroundColor = '';
             });
-
+            
+        //this part does not work yet!!:
             // Shift down all rows above the cleared row
             for (let k = j; k > 0; k--) {
+                objRow[k] = objRow[k - 1].slice(); // Copy the row above
                 objRow[k].forEach((square, index) => {
                     const aboveSquare = objRow[k - 1][index];
                     square.className = aboveSquare.className;
@@ -218,12 +231,14 @@ function clearFullRows() {
                 square.style.backgroundColor = '';
             });
 
-            // Move down one row after clearing
+            // Reset the current row to check again
             j++;
-        }
+        
     }
 }
-clearFullRows();
+}
+
+
 // Event listeners
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') {
@@ -260,7 +275,7 @@ function restartGame() {
         square.classList.remove('newBlock', 'phantomSquare');
         square.style.backgroundColor = '';
     });
-    objRow = creatingRows();
+    //objRow = creatingRows();
     isPaused = false;
     startGame();
 }
