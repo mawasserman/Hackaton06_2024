@@ -246,6 +246,7 @@ function clearRow() {
 const startButton = document.getElementById('start');
 const restartButton = document.getElementById('restart');
 const pauseButton = document.getElementById('pause');
+const backgroundMusic = document.getElementById('background-music');
 
 // Start button
 startButton.addEventListener('click', startGame);
@@ -255,6 +256,7 @@ function startGame() {
     pauseButton.style.display = 'inline';
     getNewShape();
     gameInterval = setInterval(moveDown, 500); // Set interval to move down every 500ms
+    backgroundMusic.play();
 }
 
 // Restart button
@@ -268,6 +270,8 @@ function restartGame() {
     objRow = creatingRows();
     isPaused = false;
     startGame();
+    backgroundMusic.currentTime = 0; // Restart the music from the beginning
+    backgroundMusic.play(); // Play background music
 }
 
 // Pause button
@@ -275,9 +279,11 @@ pauseButton.addEventListener('click', pauseGame);
 function pauseGame() {
     if (isPaused) {
         gameInterval = setInterval(moveDown, 500);
+        backgroundMusic.play(); // Resume music
         pauseButton.textContent = 'Pause';
     } else {
         clearInterval(gameInterval);
+        backgroundMusic.pause(); // Pause music
         pauseButton.textContent = 'Resume';
     }
     isPaused = !isPaused;
