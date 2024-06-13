@@ -4,28 +4,34 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0; /* Optional for better visual */
+    /*background-color: #f0f0f0;  Optional for better visual */
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 #game {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 0px solid red;
-    background-color: rgb(39, 158, 206);
+    /*border: 0px solid red;*/
+    /*background-color: rgb(168, 181, 174);*/
+    background-image: url(https://images.pexels.com/photos/956999/milky-way-starry-sky-night-sky-star-956999.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+    background-size: cover;
     width: 100%;
     height: 100%;
+}
+h1 {
+    color: yellow;
 }
 
 #tetris {
     display: grid; 
     grid-template-columns: repeat(10, 20px);
     grid-template-rows: repeat(20, 20px);
-    margin-top: 80px;
-    border: 1px solid black;
+    margin-top: 10px;
+    border: 3px solid white;
     width: 200px; 
     height: 400px; 
-    background-color: white;
+    /*background-color: white;*/
 }
 
 #start, #pause, #restart {
@@ -39,10 +45,10 @@ body {
 }
 
 .square {
-    border: 1px solid rgb(40, 6, 233);
+    border: 1px solid white;
     display: inline-block;
     border-radius: 10%;
-    background-color: rgb(243, 152, 235);
+    background-color: black;
     /*opacity: 0.1;*/
     width: 20px;
     height: 20px;
