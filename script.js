@@ -1,14 +1,5 @@
-// Game base 
-const tetris = document.getElementById('tetris');
-
-
-// Buttons
-const startButton = document.getElementById('start');
-const restartButton = document.getElementById('restart');
-const pauseButton = document.getElementById('pause');
-
-
 // Drawing Canvas
+const tetris = document.getElementById('tetris');
 function createCanvas(){
     for(let i = 0; i < 200; i++){
         const square = document.createElement('div');
@@ -27,7 +18,7 @@ createCanvas();
 // Create squares
 const squares = Array.from(document.querySelectorAll('.square'));
 let currentPosition = 4;
-let currentShape, currentColor =  // they will always be the same value, so the same shape will always have the same color
+// let currentShape, currentColor =  // they will always be the same value, so the same shape will always have the same color
 let gameInterval;
 let isPaused = false;
 
@@ -62,6 +53,36 @@ function getShape(){
     return {shape, color};
 }
 
+// Draw shape on the grid
+// // Draw shape on the grid
+// function drawShape(shape, color, position) {
+//     shape.forEach((row, y) => {
+//         row.forEach((value, x) => {
+//             if (value === 1) {
+//                 const index = position + y * 10 + x;
+//                 squares[index].classList.add('newBlock');
+//                 squares[index].style.backgroundColor = color;
+//             }
+//         });
+//     });
+// }
+
+// Undraw shape from the grid
+
+// // Undraw shape from the grid
+// function undrawShape(shape, position) {
+//     shape.forEach((row, y) => {
+//         row.forEach((value, x) => {
+//             if (value === 1) {
+//                 const index = position + y * 10 + x;
+//                 squares[index].classList.remove('newBlock');
+//                 squares[index].style.backgroundColor = '';
+//             }
+//         });
+//     });
+// }
+
+
 
 //Getting the next shape and color.
 //let nextColor = getShape().color;
@@ -72,25 +93,38 @@ function getNewShape(){
     undrawShape(currentShape, currentPosition);
     id = setInterval(moveDown, 500);
 }
+// // Get and draw a new shape
+// function getNewShape() {
+//     ({ shape: currentShape, color: currentColor } = getShape());
+//     currentPosition = 4;
+//     if (checkCollision(currentShape, currentPosition)) {
+//         alert('Game Over');
+//         clearInterval(gameInterval);
+//         restartButton.style.display = 'inline';
+//         return;
+//     }
+//     drawShape(currentShape, currentColor, currentPosition);
+// }
 
-// Function to check for collisions and stop the block if necessary
-// Stop block and spawn new one
-function stopBlock() {
-    currentShape.forEach((row, y) => {
-        row.forEach((value, x) => {
-            if (value === 1) {
-                const index = currentPosition + y * 10 + x;
-                squares[index].classList.add('phantomSquare');
-            }
-        });
-    });
-    getNewShape();
-}
+
+
+// // Function to check for collisions and stop the block if necessary
+// // Stop block and spawn new one
+// function stopBlock() {
+//     currentShape.forEach((row, y) => {
+//         row.forEach((value, x) => {
+//             if (value === 1) {
+//                 const index = currentPosition + y * 10 + x;
+//                 squares[index].classList.add('phantomSquare');
+//             }
+//         });
+//     });
+//     getNewShape();
+// }
 
  
 function stopBlock() {
-    // Check if any part of the block will collide with a 'phantomSquare' in the next move
-    if (currentPosition.some(index => squares[currentPosition[index] + 10].classList.contains('phantomSquare'))) {
+     if (currentPosition.some(index => squares[currentPosition[index] + 10].classList.contains('phantomSquare'))) {
         // Add 'phantomSquare' class to the current position squares
         currentPosition.forEach(index => squares[currentPosition[index]].classList.add('phantomSquare'));
         // Call drawShape to draw a new shape
@@ -98,24 +132,32 @@ function stopBlock() {
     }
 }
 
-// Example of defining currentPosition for testing 
-currentPosition = [0, 1, 2, 3]; // Example: indices of the current block
+
 
 // Call the function to test
 stopBlock();
 
-// // movement of the block
-//     automatic down
-//     side by side
-//     fast down
-
-// rotation of the block
-// 3549
 
 // collision detection
 // function checkCollision() {
 //     const nextPosition = currentPosition + 10; // Calculate the position of the block one row below the current position
 //     const nextRow = Math.floor(nextPosition / 10); // Calculate the row index of the next position
+
+// // Check for collision
+// function checkCollision(shape, position) {
+//     return shape.some((row, y) =>
+//         row.some((value, x) => {
+//             if (value === 1) {
+//                 const index = position + y * 10 + x;
+//                 return (
+//                     index >= 200 || 
+//                     squares[index].classList.contains('phantomSquare')
+//                 );
+//             }
+//             return false;
+//         })
+//     );
+// }
 
 //     // Check if any of the squares in the next row are already occupied
 //     const collision = currentShape.some((row, y) => {
@@ -150,7 +192,7 @@ function creatingRows() {
     for (let j = 0; j < 20; j++) {
         let arrRows = [];
         for (let i = 1 + (j*10); i < (11 + (j * 10)); i++) {
-            const blocks = document.querySelector(`.number${i}`);
+            const blocks = squares[i];;
             arrRows.push(blocks);
         }
         objRow[j] = arrRows; 
@@ -160,25 +202,25 @@ function creatingRows() {
 creatingRows();
 console.log(objRow);
 
-function clearRow() {
-    for (let i = 0; i < 20; i++) {
-       
-        if (objRow[i].every(block => block.classList.contains('newBlock'))) {
-            const aboveBlock = objRow[i + 1][objRow[i].indexOf(block)];
-            objRow[i].forEach(block => {
-                if (aboveBlock.classList.contains('newBlock')) {
-                    aboveBlock = block;
-                } else {
-                    block.classList.remove('newBlock');
-                    block.style.backgroundColor = '';
-                }
-            });
-
-
-            // Update the game state as necessary, e.g., increase score
-        }
+if (objRow[i].every(block => block.classList.contains('phantomSquare'))) {
+    objRow[i].forEach(block => {
+        block.classList.remove('newBlock', 'phantomSquare');
+        block.style.backgroundColor = '';
+    });
+    // Shift all rows above down
+    for (let k = i; k > 0; k--) {
+        objRow[k].forEach((block, index) => {
+            block.classList = objRow[k - 1][index].classList;
+            block.style.backgroundColor = objRow[k - 1][index].style.backgroundColor;
+        });
     }
+    // Clear the top row
+    objRow[0].forEach(block => {
+        block.classList.remove('newBlock', 'phantomSquare');
+        block.style.backgroundColor = '';
+    });
 }
+
 
 // classList.add('newBlock')
 
@@ -203,24 +245,10 @@ function clearRow() {
 
 // start
 
-// IF WE HAVE TIME!!!!
-
 // restart
-
-// score
-//27:20
-
-// level
-
-// speed
 
 // pause
 
-// sound
-
-// music    
-
-// EXTRA FUNCTION: alert "Oh no! You kid has just picked something from the fridge!" - delete a randown block... set interval to 10 seconds?
 
 
 
@@ -230,16 +258,25 @@ function clearRow() {
 
 
 
+
+
+// Buttons
+
+const restartButton = document.getElementById('restart');
+const pauseButton = document.getElementById('pause');
 
  
  
-//add Eventhandler on Start button to start the game:
+//add function to Start button
 document.getElementById("start").addEventListener('click', startGame);
-
-function startGame(){
-    squares = document.querySelectorAll(".square");
+function startGame() {
+    startButton.style.display = 'none';
+    restartButton.style.display = 'none';
+    pauseButton.style.display = 'inline';
     getNewShape();
+    gameInterval = setInterval(moveDown, 500);
 }
+
 //let squares = document.querySelectorAll(".square");
 //let currentShape, currentColor, currentPosition;
 //let id;
@@ -399,12 +436,56 @@ document.addEventListener('keydown', (event) =>{
     }
 });
 
- 
+ //let squares = document.querySelectorAll(".square");
+//let currentShape, currentColor, currentPosition;
+//let id;
+let currentShape = getShape().shape;
+console.log(currentShape);
+let currentColor = getShape().color;
 
- 
+-----------------------
+// Making the buttons work
+
+// Buttons
+let gameInterval;
+let isPaused = false;
+
+// Start button
+document.getElementById("start").addEventListener('click', startGame);
+function startGame() {
+    startButton.style.display = 'none';
+    restartButton.style.display = 'none';
+    pauseButton.style.display = 'inline';
+    getNewShape();
+    gameInterval = setInterval(moveDown, 500);
+}
+
+// Restart button
+document.getElementById('restart').addEventListener('click', restartGame);
+function restartGame() {
+    clearInterval(gameInterval);
+    squares.forEach(square => {
+        square.classList.remove('newBlock', 'phantomSquare');
+        square.style.backgroundColor = '';
+    });
+    objRow = creatingRows();
+    isPaused = false;
+    startGame();
+}
+
+// Pause buton
+document.getElementById('pause').addEventListener('click', pauseGame);
+function pauseGame() {
+    if (isPaused) {
+        gameInterval = setInterval(moveDown, 500);
+        pauseButton.textContent = 'Pause';
+    } else {
+        clearInterval(gameInterval);
+        pauseButton.textContent = 'Resume';
+    }
+    isPaused = !isPaused;
+}
 
 
 
-
-
-
+// EXTRA FUNCTION: alert "Oh no! You kid has just picked something from the fridge!" - delete a randown block... set interval to 10 seconds?
