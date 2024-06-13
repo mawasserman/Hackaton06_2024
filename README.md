@@ -41,5 +41,8 @@ Objective:
 Create horizontal lines without gaps. When a line is completed, it disappears, and any blocks above it move down.
 The game ends when the blocks stack up to the top of the playing field.
 
+link to presentation:
+https://www.loom.com/share/df95cdf423ce49329875cc2ef6385894?sid=d8746573-e30d-4c04-bd19-8054fd9b11f9
+
 
 
