@@ -28,7 +28,7 @@ body {
     background-color: white;
 }
 
-#start, #pause {
+#start, #pause, #restart {
     max-width: 200px;
     margin: 10px;
     padding: 10px;
