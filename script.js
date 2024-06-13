@@ -1,6 +1,14 @@
-// draw canvas  - marcella
+// Game base 
 const tetris = document.getElementById('tetris');
-// const game = document.getElementById('game'); //diff
+
+
+// Buttons
+const startButton = document.getElementById('start');
+const restartButton = document.getElementById('restart');
+const pauseButton = document.getElementById('pause');
+
+
+// Drawing Canvas
 function createCanvas(){
     for(let i = 0; i < 200; i++){
         const square = document.createElement('div');
@@ -8,18 +16,78 @@ function createCanvas(){
         tetris.appendChild(square);
     }
     for(let j = 0; j < 10; j++){
-        const phantomSquare = document.createElement('div');
+        const phantomSquare = document.createElement('div'); //Create a div that don't let the blocks to pass the canvas... they all stay inside. Before some pieces were going out of the canvas when we turned them 
         phantomSquare.classList.add('phantom');
         tetris.appendChild(phantomSquare);
     }
 }
 createCanvas();
 
-const squares = Array.from(document.querySelectorAll('.square'));
 
+// Create squares
+const squares = Array.from(document.querySelectorAll('.square'));
 let currentPosition = 4;
+let currentShape, currentColor =  // they will always be the same value, so the same shape will always have the same color
+let gameInterval;
+let isPaused = false;
+
+
+//create shapes
+//block -> yellow
+let o = [[1,1],[1,1]];
+//long -> light-blue
+let i = [[1,1,1,1],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+//trapez -> purple
+let t = [[0,1,0],[1,1,1],[0,0,0]];
+// z to right -> red
+let zRight = [[1,1,0],[0,1,1],[0,0,0]];
+//z to left -> green
+let zLeft = [[0,1,1],[1,1,0],[0,0,0]];
+//L left -> blue
+let lLeft = [[1,0,0],[1,1,1],[0,0,0]];
+//L right -> orange
+let lRight = [[0,0,1],[1,1,1],[0,0,0]]
+
+//array with all shapes
+let shapes = [o, i, t, zRight, zLeft, lLeft, lRight]
+
+//create colors
+const colors = ["yellow", "lightblue", "purple", "red", "green", "blue", "orange"];
+
+//getting random shape and color
+function getShape(){
+    let randomNumber = Math.floor(Math.random()*shapes.length)
+    let shape = shapes[randomNumber];
+    let color = colors[randomNumber];
+    return {shape, color};
+}
+
+
+//Getting the next shape and color.
+//let nextColor = getShape().color;
+function getNewShape(){
+    ({shape: currentShape, color: currentColor} = getShape());
+    currentPosition = 4;
+    drawShape(currentShape, currentColor, currentPosition);
+    undrawShape(currentShape, currentPosition);
+    id = setInterval(moveDown, 500);
+}
 
 // Function to check for collisions and stop the block if necessary
+// Stop block and spawn new one
+function stopBlock() {
+    currentShape.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value === 1) {
+                const index = currentPosition + y * 10 + x;
+                squares[index].classList.add('phantomSquare');
+            }
+        });
+    });
+    getNewShape();
+}
+
+ 
 function stopBlock() {
     // Check if any part of the block will collide with a 'phantomSquare' in the next move
     if (currentPosition.some(index => squares[currentPosition[index] + 10].classList.contains('phantomSquare'))) {
@@ -30,7 +98,7 @@ function stopBlock() {
     }
 }
 
-// Example of defining currentPosition for testing
+// Example of defining currentPosition for testing 
 currentPosition = [0, 1, 2, 3]; // Example: indices of the current block
 
 // Call the function to test
@@ -156,39 +224,12 @@ function clearRow() {
 
 
 
-//create shapes
-//block -> yellow
-let o = [[1,1],[1,1]];
-//long -> light-blue
-let i = [[1,1,1,1],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
-//trapez -> purple
-let t = [[0,1,0],[1,1,1],[0,0,0]];
-// z to right -> red
-let zRight = [[1,1,0],[0,1,1],[0,0,0]];
-//z to left -> green
-let zLeft = [[0,1,1],[1,1,0],[0,0,0]];
-//L left -> blue
-let lLeft = [[1,0,0],[1,1,1],[0,0,0]];
-//L right -> orange
-let lRight = [[0,0,1],[1,1,1],[0,0,0]]
-
-//array with all shapes
-let shapes = [o, i, t, zRight, zLeft, lLeft, lRight]
-
-//create colors
-const colors = ["yellow", "lightblue", "purple", "red", "green", "blue", "orange"];
-
-//we have 6 shapes. Create random number 0-6 (to choose shape index)
-//let randomNumber = Math.floor(Math.random()*shapes.length)
 
 
-//let currentShape, currentColor, currentPosition, id;
-function getShape(){
-    let randomNumber = Math.floor(Math.random()*shapes.length)
-    let shape = shapes[randomNumber];
-    let color = colors[randomNumber];
-    return {shape, color};
-}
+
+
+
+
 
  
  
@@ -281,15 +322,15 @@ drawShape(currentShape, currentColor, currentPosition);
 //create next shape
 //let nextShape = getShape().shape;
 //console.log(nextShape);
-//let nextColor = getShape().color;
-//
-function getNewShape(){
-    ({shape: currentShape, color: currentColor} = getShape());
-    currentPosition = 4;
-    drawShape(currentShape, currentColor, currentPosition);
-    undrawShape(currentShape, currentPosition);
-    id = setInterval(moveDown, 500);
-}
+// //let nextColor = getShape().color;
+// //
+// function getNewShape(){
+//     ({shape: currentShape, color: currentColor} = getShape());
+//     currentPosition = 4;
+//     drawShape(currentShape, currentColor, currentPosition);
+//     undrawShape(currentShape, currentPosition);
+//     id = setInterval(moveDown, 500);
+// }
 //move left:
 
 function moveLeft() {
