@@ -19,7 +19,6 @@ createCanvas();
 const squares = Array.from(document.querySelectorAll('.square'));
 let currentPosition = 4;
 
-
 //CREATING THE SHAPES
 //block -> yellow
 let o = [[1,1],[1,1]];
@@ -43,8 +42,8 @@ let shapes = [o, i, t, zRight, zLeft, lLeft, lRight]
 const colors = ["yellow", "lightblue", "purple", "red", "green", "blue", "orange"];
 
 //getting random shape and color
-let currentShape = getShape().shape;
-let currentColor = getShape().color;
+
+// let currentShape, currentColor;  // they will always be the same value, so the same shape will always have the same color
 
 function getShape(){
     let randomNumber = Math.floor(Math.random()*shapes.length)
@@ -81,7 +80,6 @@ function undrawShape(shape, position) {
     });
 }
 
-
 // MAKING THE SHAPES MOVE
 // Move shape down automatically - BASIC MOVEMENT
 function moveDown() {
@@ -97,61 +95,102 @@ function moveDown() {
     drawShape(currentShape, currentColor, currentPosition);
 }
 
-// Move shape left
+//move left
 function moveLeft() {
-    if (isPaused) return;
     undrawShape(currentShape, currentPosition);
+    if (currentPosition % 10 !== 0){
     currentPosition -= 1;
-    if (
-        checkCollision(currentShape, currentPosition) ||
-        currentShape.some((row, y) => row.some((value, x) => value === 1 && (currentPosition + x) % 10 === 9))
-    ) {
-        currentPosition += 1;
     }
     drawShape(currentShape, currentColor, currentPosition);
-}
+ }
+ 
+ //add eventhandler:
+ 
+ document.addEventListener('keydown', (event) =>{
+     if (event.key === 'ArrowLeft'){
+         moveLeft();
+     }
+ });
+ //move right:
 
-// Move shape right
 function moveRight() {
-    if (isPaused) return;
     undrawShape(currentShape, currentPosition);
+    if ((currentPosition + currentShape[0].length) % 10 !== 0){
     currentPosition += 1;
-    if (
-        checkCollision(currentShape, currentPosition) ||
-        currentShape.some((row, y) => row.some((value, x) => value === 1 && (currentPosition + x) % 10 === 0))
-    ) {
-        currentPosition -= 1;
     }
     drawShape(currentShape, currentColor, currentPosition);
-}
+    console.log(currentShape[0].length)
+ }
+ 
+ //add eventhandler:
+ 
+ document.addEventListener('keydown', (event) =>{
+     if (event.key === 'ArrowRight'){
+         moveRight();
+     }
+ });
 
-// Move shape down fast
-function moveDownFast() {
-    if (isPaused) return;
+ //move fast down
+ function moveDownFast() {
     undrawShape(currentShape, currentPosition);
     currentPosition += 10;
-    if (checkCollision(currentShape, currentPosition)) {
-        currentPosition -= 10;
-        drawShape(currentShape, currentColor, currentPosition);
-        stopBlock();
-        return;
-    }
     drawShape(currentShape, currentColor, currentPosition);
-}
+ }
+ 
+ //add eventhandler:
+ 
+ document.addEventListener('keydown', (event) =>{
+     if (event.key === 'ArrowDown'){
+        if (currentPosition < 180){
+         moveDownFast();
+        }
+     }
+ });
 
-// Rotate shape
-function rotate() {
-    if (isPaused) return;
+ //rotate:
+ function rotate() {
     const rotatedShape = currentShape[0].map((_, index) => currentShape.map(row => row[index])).reverse();
     undrawShape(currentShape, currentPosition);
-    if (!checkCollision(rotatedShape, currentPosition) && !rotatedShape.some((row, y) => row.some((value, x) => value === 1 && (currentPosition + x) % 10 === 0))) {
-        currentShape = rotatedShape;
-    }
+    currentShape = rotatedShape;
     drawShape(currentShape, currentColor, currentPosition);
 }
+//add eventhandler:
+ 
+document.addEventListener('keydown', (event) =>{
+    if (event.key === 'ArrowUp'){
+       rotate();
+    }
+});
+
+/*function getNewShape(){
+const {shape, color} = randomNumber;
+currentShape = shape;
+currentColor = color;
+currentPosition = 4;
+drawShape(currentShape, currentColor, currentPosition);
+
+}*/
+//it moves down with 1 milisecond speed
 
 
-// CHECK IF THE SHAPES WILL COLLIDE WITH THE WALLS OR OTHER BLOCKS
+//create next shape
+//let nextShape = getShape().shape;
+//console.log(nextShape);
+// //let nextColor = getShape().color;
+// //
+// function getNewShape(){
+//     ({shape: currentShape, color: currentColor} = getShape());
+//     currentPosition = 4;
+//     drawShape(currentShape, currentColor, currentPosition);
+//     undrawShape(currentShape, currentPosition);
+//     id = setInterval(moveDown, 500);
+// }
+
+
+
+
+
+// STOPING THE SHAPE WHEN IT COLLIDES
 // Check for collision
 function checkCollision(shape, position) {
     return shape.some((row, y) =>
@@ -169,13 +208,55 @@ function checkCollision(shape, position) {
 }
 
 
-// IF THE SHAPE COLLIDES WITH THE BOTTOM OR ANOTHER BLOCK, STOP IT, CHECK IF WE HAVE A COMPLETE ROW(IF YES, ERASE IT AND MOVE EVERYTHIG DOWN) AND CREAT A NEW SHAPE
+
+
+
+//Getting the next shape and color.
+let nextColor = getShape().color;
+
+// Draw the next shape on the grid
+function getNewShape(){
+    ({shape: currentShape, color: currentColor} = getShape());
+    currentPosition = 4;
+    drawShape(currentShape, currentColor, currentPosition);
+    undrawShape(currentShape, currentPosition);
+    id = setInterval(moveDown, 500);
+}
+
+
+
+
+// // Function to check for collisions and stop the block if necessary
+// // Stop block and spawn new one
+// function stopBlock() {
+//     currentShape.forEach((row, y) => {
+//         row.forEach((value, x) => {
+//             if (value === 1) {
+//                 const index = currentPosition + y * 10 + x;
+//                 squares[index].classList.add('phantomSquare');
+//             }
+//         });
+//     });
+//     getNewShape();
+// }
+
+ 
+// function stopBlock() {
+//      if (currentPosition.some(index => squares[currentPosition[index] + 10].classList.contains('occupiedBlock'))) {
+//         // Add 'occupiedBlock' class to the current position squares
+//         currentPosition.forEach(index => squares[currentPosition[index]].classList.add('occupiedBlock'));
+//         // Call drawShape to draw a new shape
+//         drawShape();
+//     }
+// }
+
+// Stop block and spawn new one
 function stopBlock() {
     currentShape.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value === 1) {
                 const index = currentPosition + y * 10 + x;
-                squares[index].classList.add('occupiedBlock');
+                squares[index].classList.add('phantomSquare');
             }
         });
     });
@@ -183,24 +264,88 @@ function stopBlock() {
     getNewShape();
 }
 
-
-//GETTING THE NEXT SHAPE ANS COLOR
 // Get and draw a new shape
 function getNewShape() {
     ({ shape: currentShape, color: currentColor } = getShape());
     currentPosition = 4;
     if (checkCollision(currentShape, currentPosition)) {
-        alert('Game Over');
+        alert('Game Over! Click on Restart to play again.');
         clearInterval(gameInterval);
         restartButton.style.display = 'inline';
+        pauseButton.style.display = 'none';
         return;
     }
     drawShape(currentShape, currentColor, currentPosition);
 }
 
+// // Get and draw a new shape
+// function getNewShape() {
+//     ({ shape: currentShape, color: currentColor } = getShape());
+//     currentPosition = 4;
+//     if (checkCollision(currentShape, currentPosition)) {
+//         alert('Game Over');
+//         clearInterval(gameInterval);
+//         restartButton.style.display = 'inline';
+//         return;
+//     }
+//     drawShape(currentShape, currentColor, currentPosition);
+// }
 
-//CLEARING THE ROWS
-//creating rows to be checked
+
+
+// Call the function to test
+stopBlock();
+
+
+// collision detection
+// function checkCollision() {
+//     const nextPosition = currentPosition + 10; // Calculate the position of the block one row below the current position
+//     const nextRow = Math.floor(nextPosition / 10); // Calculate the row index of the next position
+
+// // Check for collision
+// function checkCollision(shape, position) {
+//     return shape.some((row, y) =>
+//         row.some((value, x) => {
+//             if (value === 1) {
+//                 const index = position + y * 10 + x;
+//                 return (
+//                     index >= 200 || 
+//                     squares[index].classList.contains('phantomSquare')
+//                 );
+//             }
+//             return false;
+//         })
+//     );
+// }
+
+//     // Check if any of the squares in the next row are already occupied
+//     const collision = currentShape.some((row, y) => {
+//         return row.some((value, x) => {
+//             if (value === 1) {
+//                 const index = nextPosition + y * 10 + x;
+//                 const square = squares[index];
+//                 return square.classList.contains('occupiedBlock');
+//             }
+//         });
+//     });
+
+//     return collision;
+// }
+
+
+// clear the row - marcella
+
+// function clearRow(){
+//     for(let j=0; j<20; j++){
+//         let objRow = {};
+//         for(let i = (0+j); i <(10+(j*10)); i++){
+//             const blocks = document.querySelector(`.number${i}`);
+//             const arrRows = arrRows.push(blocks);
+//         }
+//         objRow[j] = arrRows; //Does it exist??????? how do i make an object with the rows?
+    
+//     }
+// }
 let objRow = {};
 function creatingRows() { 
     for (let j = 0; j < 20; j++) {
@@ -214,12 +359,11 @@ function creatingRows() {
     return objRow; 
 }
 creatingRows();
-// console.log(objRow); // to check if the rows were created correctly
+console.log(objRow);
 
-// Clearing the rows when they are full
-if (objRow[i].every(block => block.classList.contains('occupiedBlock'))) {
+if (objRow[i].every(block => block.classList.contains('phantomSquare'))) {
     objRow[i].forEach(block => {
-        block.classList.remove('occupiedBlock');
+        block.classList.remove('occupiedBlock', 'phantomSquare');
         block.style.backgroundColor = '';
     });
     // Shift all rows above down
@@ -231,13 +375,54 @@ if (objRow[i].every(block => block.classList.contains('occupiedBlock'))) {
     }
     // Clear the top row
     objRow[0].forEach(block => {
-        block.classList.remove('occupiedBlock');
+        block.classList.remove('occupiedBlock', 'phantomSquare');
         block.style.backgroundColor = '';
     });
 }
 
 
-//MAKE THE BUTTONS WORK
+// classList.add('occupiedBlock')
+
+// function clearRow(){
+//     for(let i=0; i<20; i++){
+//         if(objRow[i].every(square){
+//              square(value ===1))}{
+
+
+//             row.forEach(square => {
+//                 square.classList.remove('taken');
+//                 square.classList.remove('block');
+//                 square.style.backgroundColor = '';
+//             })
+//             const squaresRemoved = tetris.removeChild(tetris.children[i]);
+//             tetris.prepend(squaresRemoved);
+//         }
+//     } -----> from copilot...I saved but want to try something myself
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ //let squares = document.querySelectorAll(".square");
+//let currentShape, currentColor, currentPosition;
+//let id;
+let currentShape = getShape().shape;
+console.log(currentShape);
+let currentColor = getShape().color;
+
+// -----------------------
+// Making the buttons work
+
 // Buttons
 let gameInterval;
 let isPaused = false;
