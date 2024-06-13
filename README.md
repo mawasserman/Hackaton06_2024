@@ -22,11 +22,7 @@ Modern web browser (Chrome, Firefox, Safari, Edge, etc.)
 
 Installation
 
-Clone the repository:
-
-Navigate into the project directory:
-
-Open index.html in your preferred web browser.
+Clone the repository, navigate into the project directory, open index.html in your preferred web browser.
 
 How to Play
 
