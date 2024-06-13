@@ -247,6 +247,7 @@ const startButton = document.getElementById('start');
 const restartButton = document.getElementById('restart');
 const pauseButton = document.getElementById('pause');
 const backgroundMusic = document.getElementById('background-music');
+backgroundMusic.volume = 0.1;
 
 // Start button
 startButton.addEventListener('click', startGame);
